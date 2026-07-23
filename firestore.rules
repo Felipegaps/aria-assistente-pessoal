@@ -16,7 +16,7 @@ service cloud.firestore {
       allow read, write: if isSignedIn() && request.auth.uid == userId;
     }
 
-    // Household: qualquer membro pode ler; escrita restrita (adicionar membro via função controlada)
+    // Household: qualquer membro pode ler; escrita restrita
     match /households/{householdId} {
       allow read: if isHouseholdMember(householdId);
       allow write: if isSignedIn(); // refinar depois (ex: só owner remove membros)
@@ -27,10 +27,18 @@ service cloud.firestore {
       allow read, write: if isHouseholdMember(householdId);
     }
 
+    // Configuração do Home Assistant (URL + long-lived token).
+    // Fica aqui em vez de numa variável VITE_ justamente para NÃO ir
+    // para o bundle público do site. Só membros autenticados da
+    // household conseguem ler ou alterar.
+    match /households/{householdId}/config/{docId} {
+      allow read, write: if isHouseholdMember(householdId);
+    }
+
     // Agenda: dono escreve; outros membros da mesma household só leem
     match /users/{userId}/calendarCache/{eventId} {
       allow read: if isSignedIn() &&
-        (request.auth.uid == userId || 
+        (request.auth.uid == userId ||
          get(/databases/$(database)/documents/users/$(userId)).data.householdId ==
          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.householdId);
       allow write: if isSignedIn() && request.auth.uid == userId;
