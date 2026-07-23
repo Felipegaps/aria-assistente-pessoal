@@ -96,7 +96,7 @@ function RouterOutlet({ view, profile }: { view: View; profile: UserProfile | nu
     case 'shopping':
       return <ShoppingAgent profile={profile} />;
     case 'house':
-      return <HomeAgent />;
+  return <HomeAgent profile={profile} />;
     default:
       return null;
   }
