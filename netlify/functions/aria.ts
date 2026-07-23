@@ -158,7 +158,7 @@ export default async (req: Request) => {
     // O histórico já chega do cliente com a mensagem atual no final.
     if (modo === 'decidir') {
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-flash-latest',
         contents: historico,
         config: {
           systemInstruction: INSTRUCAO_DECISAO,
@@ -181,7 +181,7 @@ export default async (req: Request) => {
     // Fase 2: o cliente já executou a ferramenta e mandou o resultado.
     if (modo === 'responder') {
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-flash-latest',
         contents: [
           ...historico,
           {
