@@ -185,7 +185,7 @@ export default async (req: Request) => {
         contents: [
           ...historico,
           {
-            role: 'function',
+            role: 'user',
             parts: [
               { functionResponse: { name: chamada.nome, response: chamada.resultado } },
             ],
